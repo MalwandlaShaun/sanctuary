@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/registration_screen.dart';
+import 'screens/customer_registration_screen.dart';
+import 'screens/worker_registration_screen.dart';
 import 'screens/customer_dashboard.dart';
 import 'screens/worker_dashboard.dart';
 import 'screens/post_job_screen.dart';
@@ -29,6 +31,8 @@ class SanctuaryApp extends StatelessWidget {
       routes: {
         '/': (context) => WelcomeScreen(),
         '/registration': (context) => RegistrationScreen(),
+        '/customer-registration': (context) => CustomerRegistrationScreen(),
+        '/worker-registration': (context) => WorkerRegistrationScreen(),
         '/customer-dashboard': (context) => CustomerDashboard(),
         '/worker-dashboard': (context) => WorkerDashboard(),
         '/post-job': (context) => PostJobScreen(),
