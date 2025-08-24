@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.sactuary</groupId>
     <artifactId>sanctuary-api</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <name>sanctuary-api</name>
     <description>sanctuary-api</description>
     <url/>
@@ -87,6 +87,11 @@
             <artifactId>jjwt-jackson</artifactId>
             <version>0.12.3</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws.serverless</groupId>
+            <artifactId>aws-serverless-java-container-springboot3</artifactId>
+            <version>2.0.3</version>
         </dependency>
     </dependencies>
 
