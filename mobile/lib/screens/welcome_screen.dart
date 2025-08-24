@@ -87,7 +87,7 @@ class WelcomeScreen extends StatelessWidget {
                         width: double.infinity,
                         height: 56,
                         child: OutlinedButton(
-                          onPressed: () => Navigator.pushNamed(context, '/worker-dashboard'),
+                          onPressed: () => Navigator.pushNamed(context, '/login'),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.white,
                             side: BorderSide(color: Colors.white, width: 2),

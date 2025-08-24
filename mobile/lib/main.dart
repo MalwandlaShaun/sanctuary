@@ -4,6 +4,11 @@ import 'screens/welcome_screen.dart';
 import 'screens/registration_screen.dart';
 import 'screens/customer_registration_screen.dart';
 import 'screens/worker_registration_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/customer_login_screen.dart';
+import 'screens/worker_login_screen.dart';
+import 'screens/quick_login_screen.dart';
+import 'screens/forgot_password_screen.dart';
 import 'screens/customer_dashboard.dart';
 import 'screens/worker_dashboard.dart';
 import 'screens/post_job_screen.dart';
@@ -33,6 +38,11 @@ class SanctuaryApp extends StatelessWidget {
         '/registration': (context) => RegistrationScreen(),
         '/customer-registration': (context) => CustomerRegistrationScreen(),
         '/worker-registration': (context) => WorkerRegistrationScreen(),
+        '/login': (context) => LoginScreen(),
+        '/customer-login': (context) => CustomerLoginScreen(),
+        '/worker-login': (context) => WorkerLoginScreen(),
+        '/quick-login': (context) => QuickLoginScreen(),
+        '/forgot-password': (context) => ForgotPasswordScreen(),
         '/customer-dashboard': (context) => CustomerDashboard(),
         '/worker-dashboard': (context) => WorkerDashboard(),
         '/post-job': (context) => PostJobScreen(),
