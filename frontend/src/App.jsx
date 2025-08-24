@@ -1,6 +1,6 @@
 // src/App.jsx
 import React, { useContext } from 'react';
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Navigation from './components/Navigation';
 import Header from './components/Header';
 import AppContext from './context/AppContext';
@@ -9,15 +9,16 @@ import ErrorBoundary from './components/ErrorBoundary';
 // Global Context for app state
 import Dashboard from './pages/Dashboard';
 import UsersManagement from './pages/UsersManagement';
-import WorkersManagement from './pages/WorkersManagement';
-import JobManagement from './pages/JobManagement';
-import PaymentManagement from './pages/PaymentManagement';
-import ReviewsRatings from './pages/ReviewsRatings';
-import ReportsAnalytics from './pages/ReportsAnalytics';
-import SafetyCenter from './pages/SafetyCenter';
-import SettingsComponent from './pages/Settings';
-import CustomerFocus from './pages/CustomerFocus';
+// import WorkersManagement from './pages/WorkersManagement';
+// import JobManagement from './pages/JobManagement';
+// import PaymentManagement from './pages/PaymentManagement';
+// import ReviewsRatings from './pages/ReviewsRatings';
+// import ReportsAnalytics from './pages/ReportsAnalytics';
+// import SafetyCenter from './pages/SafetyCenter';
+// import SettingsComponent from './pages/Settings';
+// import CustomerFocus from './pages/CustomerFocus';
 
+const queryClient = new QueryClient();
 
 // Main App Component
 const App = () => {
@@ -33,14 +34,14 @@ const App = () => {
         switch(currentRoute) {
             case 'dashboard': return <Dashboard />;
             case 'users': return <UsersManagement />;
-            case 'workers': return <WorkersManagement />;
-            case 'jobs': return <JobManagement />;
-            case 'payments': return <PaymentManagement />;
-            case 'reviews': return <ReviewsRatings />;
-            case 'reports': return <ReportsAnalytics />;
-            case 'safety': return <SafetyCenter />;
-            case 'settings': return <SettingsComponent/>;
-            case 'customers': return <CustomerFocus />;
+            // case 'workers': return <WorkersManagement />;
+            // case 'jobs': return <JobManagement />;
+            // case 'payments': return <PaymentManagement />;
+            // case 'reviews': return <ReviewsRatings />;
+            // case 'reports': return <ReportsAnalytics />;
+            // case 'safety': return <SafetyCenter />;
+            // case 'settings': return <SettingsComponent/>;
+            // case 'customers': return <CustomerFocus />;
             default: return <Dashboard />;
         }
     };
@@ -63,8 +64,12 @@ const App = () => {
 // Root Component with Router
 export default function SanctuaryAdminCMS() {
     return (
-        <Router>
-            <App />
-        </Router>
+        <QueryClientProvider client={queryClient}>
+            <ErrorBoundary>
+                <Router>
+                    <App />
+                </Router>
+            </ErrorBoundary>
+        </QueryClientProvider>
     );
 }

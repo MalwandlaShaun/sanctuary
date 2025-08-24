@@ -8,7 +8,7 @@ import StatCard from '../components/StatCard';
 // Users Management Component
 const UsersManagement = () => {
     const {data} = useContext(AppContext);
-    // Check if context is undefined
+    console.log("user data", data);
     if (!data) {
         return <div>Error: AppContext is not available. Ensure Dashboard is wrapped in Router.</div>;
     }
@@ -66,7 +66,7 @@ const UsersManagement = () => {
                     </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                    {data.users.map(user => (
+                    {data.users.data.map(user => (
                         <tr key={user.id}>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.id}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.name}</td>
