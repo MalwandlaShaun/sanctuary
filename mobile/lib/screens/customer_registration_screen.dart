@@ -14,6 +14,9 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
+  // Add PageController to control the PageView
+  final PageController _pageController = PageController();
+
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _agreeToTerms = false;
@@ -26,6 +29,7 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _pageController.dispose(); // Don't forget to dispose the controller
     super.dispose();
   }
 
@@ -80,6 +84,7 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
 
             Expanded(
               child: PageView(
+                controller: _pageController, // Add the controller
                 onPageChanged: (index) {
                   setState(() {
                     _currentStep = index;
@@ -99,12 +104,13 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
   }
 
   Widget _buildBasicInfoStep() {
-    return Padding(
+    return SingleChildScrollView( // Wrap with SingleChildScrollView
       padding: EdgeInsets.all(24.0),
       child: Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min, // Add this
           children: [
             Text(
               'Basic Info & Profile',
@@ -290,7 +296,7 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
               },
             ),
 
-            Spacer(),
+            SizedBox(height: 40), // Changed from Spacer() to SizedBox
 
             // Continue Button
             SizedBox(
@@ -299,10 +305,11 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
               child: ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Move to next step
-                    setState(() {
-                      _currentStep = 1;
-                    });
+                    // Move to next step using PageController
+                    _pageController.nextPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -329,10 +336,11 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
   }
 
   Widget _buildVerificationStep() {
-    return Padding(
+    return SingleChildScrollView( // Wrap with SingleChildScrollView
       padding: EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min, // Add this
         children: [
           Text(
             'ID Verification',
@@ -444,16 +452,17 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
             ),
           ),
 
-          Spacer(),
+          SizedBox(height: 40), // Changed from Spacer() to SizedBox
 
           Row(
             children: [
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
-                    setState(() {
-                      _currentStep = 0;
-                    });
+                    _pageController.previousPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: Color(0xFF2196F3)),
@@ -476,9 +485,10 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      _currentStep = 2;
-                    });
+                    _pageController.nextPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF2196F3),
@@ -505,10 +515,11 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
   }
 
   Widget _buildPaymentStep() {
-    return Padding(
+    return SingleChildScrollView( // Wrap with SingleChildScrollView
       padding: EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min, // Add this
         children: [
           Text(
             'Add Payment Method',
@@ -591,16 +602,17 @@ class _CustomerRegistrationScreenState extends State<CustomerRegistrationScreen>
             contentPadding: EdgeInsets.zero,
           ),
 
-          Spacer(),
+          SizedBox(height: 40), // Changed from Spacer() to SizedBox
 
           Row(
             children: [
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
-                    setState(() {
-                      _currentStep = 1;
-                    });
+                    _pageController.previousPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: Color(0xFF2196F3)),
