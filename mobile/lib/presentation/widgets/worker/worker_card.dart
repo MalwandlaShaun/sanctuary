@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/worker.dart';
+import '../../../data/models/worker.dart';
 
 class WorkerCard extends StatelessWidget {
   final Worker worker;

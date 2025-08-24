@@ -1,6 +1,48 @@
 import 'package:flutter/material.dart';
 
-class CustomerDashboard extends StatelessWidget {
+class CustomerDashboard extends StatefulWidget {
+  @override
+  _CustomerDashboardState createState() => _CustomerDashboardState();
+}
+
+class _CustomerDashboardState extends State<CustomerDashboard> {
+  int _currentIndex = 0;
+
+  // List of pages for each tab
+  final List<Widget> _pages = [
+    _HomePage(),
+    _BrowsePage(),
+    _WalletPage(),
+    _ProfilePage(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _currentIndex,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Browse'),
+          BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: 'Wallet'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
+      ),
+    );
+  }
+}
+
+// Home Page (your original dashboard content)
+class _HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,18 +170,6 @@ class CustomerDashboard extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: 0,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Browse'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet), label: 'Wallet'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
-      ),
     );
   }
 
@@ -241,7 +271,7 @@ class CustomerDashboard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Worker Name',
+                  name,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -278,6 +308,150 @@ class CustomerDashboard extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// Browse Page
+class _BrowsePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Browse Workers'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.search, size: 80, color: Colors.grey[400]),
+            SizedBox(height: 16),
+            Text(
+              'Browse Workers',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Find the perfect worker for your task',
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Wallet Page
+class _WalletPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Wallet'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.account_balance_wallet, size: 80, color: Colors.green),
+            SizedBox(height: 16),
+            Text(
+              'Your Wallet',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Manage your payments and transactions',
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+            SizedBox(height: 24),
+            Container(
+              padding: EdgeInsets.all(20),
+              margin: EdgeInsets.symmetric(horizontal: 40),
+              decoration: BoxDecoration(
+                color: Colors.green[50],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'Current Balance',
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    '\$248.50',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green[700],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// Profile Page
+class _ProfilePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Profile'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.blue,
+              radius: 50,
+              child: Text(
+                'J',
+                style: TextStyle(fontSize: 32, color: Colors.white),
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'John Doe',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'john.doe@email.com',
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+            SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+              ),
+              child: Text(
+                'Edit Profile',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

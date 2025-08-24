@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'screens/welcome_screen.dart';
-import 'screens/registration_screen.dart';
-import 'screens/customer_registration_screen.dart';
-import 'screens/worker_registration_screen.dart';
-import 'screens/login_screen.dart';
-import 'screens/customer_login_screen.dart';
-import 'screens/worker_login_screen.dart';
-import 'screens/quick_login_screen.dart';
-import 'screens/forgot_password_screen.dart';
-import 'screens/customer_dashboard.dart';
-import 'screens/worker_dashboard.dart';
-import 'screens/post_job_screen.dart';
-import 'screens/browse_workers_screen.dart';
-import 'screens/worker_profile_screen.dart';
-import 'screens/wallet_screen.dart';
-import 'screens/rate_review_screen.dart';
+import 'presentation/screens/welcome_screen.dart';
+import 'presentation/screens/registration_screen.dart';
+import 'presentation/screens/customer_registration_screen.dart';
+import 'presentation/screens/worker_registration_screen.dart';
+import 'presentation/screens/login_screen.dart';
+import 'presentation/screens/customer_login_screen.dart';
+import 'presentation/screens/worker_login_screen.dart';
+import 'presentation/screens/quick_login_screen.dart';
+import 'presentation/screens/forgot_password_screen.dart';
+import 'presentation/screens/customer_dashboard.dart';
+import 'presentation/screens/worker_dashboard.dart';
+import 'presentation/screens/post_job_screen.dart';
+import 'presentation/screens/browse_workers_screen.dart';
+import 'presentation/screens/worker_profile_screen.dart';
+import 'presentation/screens/wallet_screen.dart';
+import 'presentation/screens/rate_review_screen.dart';
 
 void main() {
   runApp(SanctuaryApp());

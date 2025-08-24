@@ -1,6 +1,6 @@
-import '../models/job.dart';
-import '../models/worker.dart';
-import '../models/transaction.dart';
+import '../data/models/job.dart';
+import '../data/models/worker.dart';
+import '../data/models/transaction.dart';
 
 class DataService {
   static List<Job> getAvailableJobs() {
