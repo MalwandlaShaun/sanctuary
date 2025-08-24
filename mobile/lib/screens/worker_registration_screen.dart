@@ -16,6 +16,9 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
   final _experienceController = TextEditingController();
   final _rateController = TextEditingController();
 
+  // Add PageController to control the PageView
+  final PageController _pageController = PageController();
+
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _agreeToTerms = false;
@@ -50,6 +53,7 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
     _confirmPasswordController.dispose();
     _experienceController.dispose();
     _rateController.dispose();
+    _pageController.dispose(); // Don't forget to dispose the controller
     super.dispose();
   }
 
@@ -104,6 +108,7 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
 
             Expanded(
               child: PageView(
+                controller: _pageController, // Add the controller
                 onPageChanged: (index) {
                   setState(() {
                     _currentStep = index;
@@ -124,12 +129,13 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
   }
 
   Widget _buildBasicInfoStep() {
-    return Padding(
+    return SingleChildScrollView( // Wrap with SingleChildScrollView
       padding: EdgeInsets.all(24.0),
       child: Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min, // Add this
           children: [
             Text(
               'Basic Info & Profile',
@@ -315,7 +321,7 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
               },
             ),
 
-            Spacer(),
+            SizedBox(height: 40), // Changed from Spacer() to SizedBox
 
             // Continue Button
             SizedBox(
@@ -324,9 +330,11 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    setState(() {
-                      _currentStep = 1;
-                    });
+                    // Move to next step using PageController
+                    _pageController.nextPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
                   }
                 },
                 style: ElevatedButton.styleFrom(
@@ -353,10 +361,11 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
   }
 
   Widget _buildSkillsExperienceStep() {
-    return Padding(
+    return SingleChildScrollView( // Wrap with SingleChildScrollView
       padding: EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min, // Add this
         children: [
           Text(
             'Skills and Experience',
@@ -387,8 +396,9 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
           ),
           SizedBox(height: 16),
 
-          Expanded(
-            flex: 2,
+          // Fixed height container for skills grid instead of Expanded
+          Container(
+            height: 300, // Set a fixed height
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -469,16 +479,17 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
             ),
           ),
 
-          SizedBox(height: 24),
+          SizedBox(height: 40), // Changed from default spacing
 
           Row(
             children: [
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
-                    setState(() {
-                      _currentStep = 0;
-                    });
+                    _pageController.previousPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: Color(0xFF4CAF50)),
@@ -501,9 +512,10 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: _selectedSkills.isNotEmpty ? () {
-                    setState(() {
-                      _currentStep = 2;
-                    });
+                    _pageController.nextPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
                   } : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _selectedSkills.isNotEmpty ? Color(0xFF4CAF50) : Colors.grey[400],
@@ -530,10 +542,11 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
   }
 
   Widget _buildVerificationStep() {
-    return Padding(
+    return SingleChildScrollView( // Wrap with SingleChildScrollView
       padding: EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min, // Add this
         children: [
           Text(
             'ID and Background Check',
@@ -666,16 +679,17 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
             ),
           ),
 
-          Spacer(),
+          SizedBox(height: 40), // Changed from Spacer() to SizedBox
 
           Row(
             children: [
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
-                    setState(() {
-                      _currentStep = 1;
-                    });
+                    _pageController.previousPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: Color(0xFF4CAF50)),
@@ -698,9 +712,10 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: _backgroundCheck ? () {
-                    setState(() {
-                      _currentStep = 3;
-                    });
+                    _pageController.nextPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
                   } : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _backgroundCheck ? Color(0xFF4CAF50) : Colors.grey[400],
@@ -727,10 +742,11 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
   }
 
   Widget _buildBankingStep() {
-    return Padding(
+    return SingleChildScrollView( // Wrap with SingleChildScrollView
       padding: EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min, // Add this
         children: [
           Text(
             'Bank Account Details',
@@ -895,16 +911,17 @@ class _WorkerRegistrationScreenState extends State<WorkerRegistrationScreen> {
             contentPadding: EdgeInsets.zero,
           ),
 
-          Spacer(),
+          SizedBox(height: 40), // Changed from Spacer() to SizedBox
 
           Row(
             children: [
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
-                    setState(() {
-                      _currentStep = 2;
-                    });
+                    _pageController.previousPage(
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: Color(0xFF4CAF50)),
