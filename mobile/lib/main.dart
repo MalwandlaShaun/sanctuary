@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'presentation/screens/welcome_screen.dart';
-import 'presentation/screens/registration_screen.dart';
-import 'presentation/screens/customer_registration_screen.dart';
-import 'presentation/screens/worker_registration_screen.dart';
-import 'presentation/screens/login_screen.dart';
-import 'presentation/screens/customer_login_screen.dart';
-import 'presentation/screens/worker_login_screen.dart';
-import 'presentation/screens/quick_login_screen.dart';
-import 'presentation/screens/forgot_password_screen.dart';
-import 'presentation/screens/customer_dashboard.dart';
-import 'presentation/screens/worker_dashboard.dart';
-import 'presentation/screens/post_job_screen.dart';
-import 'presentation/screens/browse_workers_screen.dart';
-import 'presentation/screens/worker_profile_screen.dart';
-import 'presentation/screens/wallet_screen.dart';
-import 'presentation/screens/rate_review_screen.dart';
+import 'presentation/screens/shared/welcome_screen.dart';
+import 'presentation/screens/auth/registration_screen.dart';
+import 'presentation/screens/auth/customer_registration_screen.dart';
+import 'presentation/screens/auth/worker_registration_screen.dart';
+import 'presentation/screens/auth/login_screen.dart';
+import 'presentation/screens/auth/customer_login_screen.dart';
+import 'presentation/screens/auth/worker_login_screen.dart';
+import 'presentation/screens/auth/quick_login_screen.dart';
+import 'presentation/screens/auth/forgot_password_screen.dart';
+import 'presentation/screens/customer/customer_dashboard.dart';
+import 'presentation/screens/worker/worker_dashboard.dart';
+import 'presentation/screens/customer/job/post_job_screen.dart';
+import 'presentation/screens/customer/browse_workers_screen.dart';
+import 'presentation/screens/worker/worker_profile_screen.dart';
+import 'presentation/screens/customer/wallet_screen.dart';
+import 'presentation/screens/shared/rate_review_screen.dart';
 
 void main() {
   runApp(SanctuaryApp());
