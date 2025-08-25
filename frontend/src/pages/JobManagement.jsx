@@ -11,7 +11,6 @@ import StatCard from '../components/StatCard';
 // Job Management Component
 const JobManagement = () => {
     const { data } = useContext(AppContext);
-
     if(!data){
         return <div>Error: AppContext is not available. Ensure Dashboard is wrapped in Router.</div>;
     }
@@ -66,7 +65,7 @@ const JobManagement = () => {
                     </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                    {data.jobs.map(job => (
+                    {data.jobs.data.map(job => (
                         <tr key={job.id}>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{job.id}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{job.customer}</td>

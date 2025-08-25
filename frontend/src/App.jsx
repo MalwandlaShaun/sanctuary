@@ -9,14 +9,14 @@ import ErrorBoundary from './components/ErrorBoundary';
 // Global Context for app state
 import Dashboard from './pages/Dashboard';
 import UsersManagement from './pages/UsersManagement';
-// import WorkersManagement from './pages/WorkersManagement';
-// import JobManagement from './pages/JobManagement';
-// import PaymentManagement from './pages/PaymentManagement';
-// import ReviewsRatings from './pages/ReviewsRatings';
-// import ReportsAnalytics from './pages/ReportsAnalytics';
-// import SafetyCenter from './pages/SafetyCenter';
-// import SettingsComponent from './pages/Settings';
-// import CustomerFocus from './pages/CustomerFocus';
+import WorkersManagement from './pages/WorkersManagement';
+import JobManagement from './pages/JobManagement';
+import PaymentManagement from './pages/PaymentManagement';
+import ReviewsRatings from './pages/ReviewsRatings';
+import ReportsAnalytics from './pages/ReportsAnalytics';
+import SafetyCenter from './pages/SafetyCenter';
+import SettingsComponent from './pages/Settings';
+import CustomerFocus from './pages/CustomerFocus';
 
 const queryClient = new QueryClient();
 
@@ -34,14 +34,14 @@ const App = () => {
         switch(currentRoute) {
             case 'dashboard': return <Dashboard />;
             case 'users': return <UsersManagement />;
-            // case 'workers': return <WorkersManagement />;
-            // case 'jobs': return <JobManagement />;
-            // case 'payments': return <PaymentManagement />;
-            // case 'reviews': return <ReviewsRatings />;
-            // case 'reports': return <ReportsAnalytics />;
-            // case 'safety': return <SafetyCenter />;
-            // case 'settings': return <SettingsComponent/>;
-            // case 'customers': return <CustomerFocus />;
+            case 'workers': return <WorkersManagement />;
+            case 'jobs': return <JobManagement />;
+            case 'payments': return <PaymentManagement />;
+            case 'reviews': return <ReviewsRatings />;
+            case 'reports': return <ReportsAnalytics />;
+            case 'safety': return <SafetyCenter />;
+            case 'settings': return <SettingsComponent/>;
+            case 'customers': return <CustomerFocus />;
             default: return <Dashboard />;
         }
     };

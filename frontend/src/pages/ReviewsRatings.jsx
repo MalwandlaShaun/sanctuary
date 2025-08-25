@@ -56,7 +56,7 @@ if(!data){
             </div>
 
             <div className="space-y-4">
-                {data.reviews.map((review, index) => (
+                {data.reviews.data.map((review, index) => (
                     <div key={index} className="bg-white rounded-lg shadow-sm p-6 border">
                         <div className="flex items-start justify-between mb-4">
                             <div>

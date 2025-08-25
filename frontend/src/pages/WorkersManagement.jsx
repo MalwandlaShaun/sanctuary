@@ -9,7 +9,6 @@ import StatCard from '../components/StatCard';
 // Workers Management Component
 const WorkersManagement = () => {
     const { data } = useContext(AppContext);
-
     if(!data){
         return <div>Error: AppContext is not available. Ensure Dashboard is wrapped in Router.</div>;
 
@@ -76,7 +75,7 @@ const WorkersManagement = () => {
                     </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                    {data.workers.map(worker => (
+                    {data.workers.data.map(worker => (
                         <tr key={worker.id}>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{worker.id}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{worker.name}</td>

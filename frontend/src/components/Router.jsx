@@ -10,7 +10,7 @@ const fetchData = async (endpoint) => {
   return res.json();
 };
 
-// Define all endpoints
+// All endpoints
 const endpoints = [
   'dashboard',
   'users',
@@ -24,7 +24,7 @@ const endpoints = [
 const Router = ({ children }) => {
   const [currentRoute, setCurrentRoute] = useState(window.location.hash.slice(1) || 'dashboard');
 
-  // Use useQueries to fetch data from all endpoints
+  // Used useQueries to fetch data from all endpoints
   const queries = useQueries({
     queries: endpoints.map((endpoint) => ({
       queryKey: [endpoint],
@@ -48,6 +48,7 @@ const Router = ({ children }) => {
   const error = queries.find((query) => query.error)?.error;
 
   // Always call useEffect, regardless of loading or error state
+//   todo:  change form hooks(React.useEffect) to signals(preact)
   React.useEffect(() => {
     const handleHashChange = () => {
       setCurrentRoute(window.location.hash.slice(1) || 'dashboard');

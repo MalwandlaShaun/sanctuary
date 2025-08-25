@@ -54,7 +54,7 @@ const PaymentManagement = () => {
                     </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                    {data.payments.map(payment => (
+                    {data.payments.data.map(payment => (
                         <tr key={payment.id}>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{payment.id}</td>
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{payment.type}</td>

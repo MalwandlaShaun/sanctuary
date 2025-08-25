@@ -28,7 +28,7 @@ if(!data){
             </div>
 
             <div className="space-y-4 mb-6">
-                {data.safetyAlerts.map((alert, index) => (
+                {data.safetyAlerts.data.map((alert, index) => (
                     <div key={index} className={`p-4 rounded-lg border-l-4 ${
                         alert.type === 'Emergency Alert' ? 'bg-red-50 border-red-500' :
                             alert.type === 'Safety Violation' ? 'bg-yellow-50 border-yellow-500' :
