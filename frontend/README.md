@@ -12,8 +12,14 @@ Currently, two official plugins are available:
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 
 
+
+# Frontend 
+
+cd frontend
+npm run dev / npm run dev -- --open
+
 # json server
 
-run this command for using the jons server to using the mock data in db.json: 
+run this command for using the jons server to get the mock data in db.json: 
 npx json-server --watch db.json --port 4000
 
