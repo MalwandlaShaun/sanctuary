@@ -17,6 +17,7 @@ import ReportsAnalytics from './pages/ReportsAnalytics';
 import SafetyCenter from './pages/SafetyCenter';
 import SettingsComponent from './pages/Settings';
 import CustomerFocus from './pages/CustomerFocus';
+import LoginPage from './auth-system';
 
 const queryClient = new QueryClient();
 
@@ -24,12 +25,16 @@ const queryClient = new QueryClient();
 const App = () => {
     const context = useContext(AppContext);
 
-    // Check if context is undefined
     if (!context) {
         return <div>Error: AppContext is not available. Ensure App is wrapped in Router.</div>;
     }
 
-    const { currentRoute } = context;
+    const { currentRoute, auth } = context;
+
+    if (!auth.isAuthenticated) {
+        return <LoginPage />;
+    }
+
     const renderPage = () => {
         switch(currentRoute) {
             case 'dashboard': return <Dashboard />;
@@ -40,7 +45,7 @@ const App = () => {
             case 'reviews': return <ReviewsRatings />;
             case 'reports': return <ReportsAnalytics />;
             case 'safety': return <SafetyCenter />;
-            case 'settings': return <SettingsComponent/>;
+            case 'settings': return <SettingsComponent />;
             case 'customers': return <CustomerFocus />;
             default: return <Dashboard />;
         }
@@ -62,9 +67,9 @@ const App = () => {
 };
 
 // Root Component with Router
-export default function SanctuaryAdminCMS() {
+const SanctuaryAdminCMS = () => {
     return (
-        <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={new QueryClient()}>
             <ErrorBoundary>
                 <Router>
                     <App />
@@ -72,4 +77,5 @@ export default function SanctuaryAdminCMS() {
             </ErrorBoundary>
         </QueryClientProvider>
     );
-}
+};
+export default SanctuaryAdminCMS;

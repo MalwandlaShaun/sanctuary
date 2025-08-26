@@ -1,7 +1,15 @@
 import { LogOut,Bell} from 'lucide-react';
-
+import AppContext from '../context/AppContext';
+import { useContext } from 'react';
 // Header Component
 const Header = () => {
+    const { setAuth } = useContext(AppContext);
+
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        setAuth({ isAuthenticated: false, token: null });
+    };
+
     return (
         <header className="bg-white shadow-sm border-b px-6 py-4">
             <div className="flex items-center justify-between">
@@ -10,7 +18,10 @@ const Header = () => {
                     <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
                         <Bell size={20} />
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700">
+                    <button 
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700"
+                    >
                         <LogOut size={18} />
                         Logout
                     </button>

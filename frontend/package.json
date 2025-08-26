@@ -7,10 +7,18 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "frontend/node_modules/.bin/eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "json-server --watch db.json --port 4000",
+    "dev-all": "concurrently \"npm run dev\" \"npm run server\"",
+    "test": "jest"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.85.5",
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "json-server": "^0.17.4",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.541.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

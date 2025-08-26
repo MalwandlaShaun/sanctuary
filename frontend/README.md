@@ -13,13 +13,17 @@ If you are developing a production application, we recommend using TypeScript wi
 
 
 
-# Frontend 
-
-cd frontend
-npm run dev / npm run dev -- --open
+follow these steps to strt the app:
 
 # json server
 
 run this command for using the jons server to get the mock data in db.json: 
-npx json-server --watch db.json --port 4000
+node server.js
+
+# Frontend 
+
+cd frontend
+npm run dev -- --open
+
+
 

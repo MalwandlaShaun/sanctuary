@@ -28,6 +28,15 @@
       { "type": "Emergency Alert", "message": "Worker #WRK045 has triggered panic button during Job #JOB234", "location": "123 Oak Street, Pretoria", "status": "Emergency Response" },
       { "type": "Safety Violation", "message": "Customer reported inappropriate behavior from Worker #WRK078", "incident": "#INC001", "status": "Investigate" },
       { "type": "Background Check Complete", "message": "Worker #WRK089 cleared for platform access", "status": "Approve" }
-    ]
+    ],
+    "admins": [
+    {
+      "id": "#ADM001",
+      "username": "admin",
+      "password": "$2b$10$C44uCi8nbg1z./45wMD89uk0l8f95D8s10m8qRgkvWong7k0/wE7a",
+      "email": "admin@sanctuary.com",
+      "role": "ADMIN"
+    }
+  ]
   }
   
