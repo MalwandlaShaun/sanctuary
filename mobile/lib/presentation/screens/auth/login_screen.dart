@@ -1,6 +1,109 @@
 import 'package:flutter/material.dart';
+import 'package:jwt_decode/jwt_decode.dart';
+import 'package:sanctuary/core/network/api_client.dart';
+import 'package:sanctuary/core/utils/token_storage.dart';
+import 'package:sanctuary/data/models/login_request.dart';
+import 'package:sanctuary/data/repositories/auth_repository_impl.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  bool _obscurePassword = true;
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _signIn() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
+
+      try {
+
+        final loginRequest = LoginRequest(
+          username: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+
+        final authResponse = await AuthRepository(ApiClient()).login(loginRequest);
+
+        // Save token locally
+        await TokenStorage.saveToken(authResponse.token);
+
+        // Decode JWT to get roles
+        Map<String, dynamic> payload = Jwt.parseJwt(authResponse.token);
+        List<dynamic> roles = payload['roles'] ?? [];
+
+        setState(() => _isLoading = false);
+
+        // Redirect based on role
+        if (roles.contains('CUSTOMER')) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/customer-dashboard',
+                (route) => false,
+          );
+        } else if (roles.contains('WORKER')) {
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            '/worker-dashboard',
+                (route) => false,
+          );
+        } else if (roles.contains('ADMINISTRATOR')) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Center(
+                child: Text(
+                  'Administrators must use the admin dashboard',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        } else {
+          // Unknown role fallback
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Center(
+                child: Text(
+                  'Unknown role, cannot navigate',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (e) {
+        setState(() => _isLoading = false);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Center(
+              child: Text(
+                'Login failed',
+                textAlign: TextAlign.center,
+              ),
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +125,7 @@ class LoginScreen extends StatelessWidget {
         centerTitle: false,
       ),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: EdgeInsets.all(24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,7 +273,7 @@ class LoginScreen extends StatelessWidget {
 
               SizedBox(height: 40),
 
-              // Divider with "or" text
+              // Divider
               Row(
                 children: [
                   Expanded(child: Divider(color: Colors.grey[300])),
@@ -190,35 +293,58 @@ class LoginScreen extends StatelessWidget {
 
               SizedBox(height: 30),
 
-              // Quick Sign In with Email
-              Center(
+              // Email/Password Login Form
+              Form(
+                key: _formKey,
                 child: Column(
                   children: [
-                    Text(
-                      'Don\'t remember your account type?',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
+                    TextFormField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                        prefixIcon: Icon(Icons.email_outlined),
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return "Enter email";
+                        if (!value.contains('@')) return "Enter valid email";
+                        return null;
+                      },
                     ),
                     SizedBox(height: 16),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        prefixIcon: Icon(Icons.lock_outline),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                          ),
+                          onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) return "Enter password";
+                        if (value.length < 6) return "Password must be at least 6 characters";
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 24),
                     SizedBox(
                       width: double.infinity,
                       height: 56,
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pushNamed(context, '/quick-login'),
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(color: Color(0xFF6366F1), width: 2),
+                      child: ElevatedButton(
+                        onPressed: _isLoading ? null : _signIn,
+                        child: _isLoading
+                            ? CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                            : Text("Sign In"),
+                        style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(28),
-                          ),
-                        ),
-                        child: Text(
-                          'Sign In with Email',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF6366F1),
                           ),
                         ),
                       ),
@@ -227,7 +353,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
 
-              Spacer(),
+              SizedBox(height: 40),
 
               // Sign Up Link
               Center(
@@ -236,10 +362,7 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     Text(
                       'Don\'t have an account? ',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                     ),
                     GestureDetector(
                       onTap: () => Navigator.pushNamed(context, '/registration'),

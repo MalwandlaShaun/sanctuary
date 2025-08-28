@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-
 public class LoginRequest {
 
     @NotEmpty(message = "Username cannot be empty")

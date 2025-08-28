@@ -46,7 +46,7 @@ public class UserService implements IUserService {
         System.out.println("auth");
 
         User user = (User) authentication.getPrincipal();
-        String token = jwtUtil.generateToken(user.getUsername());
+        String token = jwtUtil.generateToken(user.getUsername(),user.getRoles().stream().map(Role::name).toList());
 
         System.out.println(token);
         return new AuthResponse(dtoMapper.map(user, UserDto.class), token);

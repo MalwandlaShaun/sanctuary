@@ -42,7 +42,7 @@ public class DtoMapper {
     }
     
     public <T, D> List<D> mapList(List<T> sourceList, Class<D> targetClass) {
-        return sourceList.stream()
+        return sourceList.parallelStream()
                 .map(source -> map(source, targetClass))
                 .collect(Collectors.toList());
     }

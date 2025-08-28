@@ -17,10 +17,8 @@ import java.util.stream.Collectors;
 @Document(collection = "users")
 public class User extends BaseEntity implements UserDetails {
 
-    private String firstName;
+    private String fullName;
 
-    private String lastName;
-    
     private String password;
 
     @Indexed(unique = true)

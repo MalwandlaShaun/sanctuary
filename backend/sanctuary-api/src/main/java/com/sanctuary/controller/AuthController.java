@@ -5,6 +5,7 @@ import com.sanctuary.dto.LoginRequest;
 import com.sanctuary.dto.MessageResponse;
 import com.sanctuary.dto.RegisterRequest;
 import com.sanctuary.service.user.IUserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Auth API", description = "Operations related to authentication")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -31,8 +33,4 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("User registration successful"));
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<String> test() {
-        return ResponseEntity.ok("JWT Auth is working!");
-    }
 }

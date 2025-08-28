@@ -1,13 +1,16 @@
 package com.sanctuary.dto.customer.request;
 
+import com.sanctuary.dto.RegisterRequest;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class RegisterCustomer {
-
-    @NotEmpty(message = "User id is required.")
-    String userId;
+@Getter
+@Setter
+@AllArgsConstructor
+public class RegisterCustomer extends RegisterRequest {
 
     @NotEmpty(message = "Profile picture us required.")
     String profilePictureBase64;

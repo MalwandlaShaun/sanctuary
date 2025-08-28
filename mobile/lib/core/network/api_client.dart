@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
+import 'package:sanctuary/core/utils/token_storage.dart';
+import 'package:sanctuary/core/utils/api.dart';
 import '../constants/api_constants.dart';
 
 @singleton
@@ -7,6 +9,7 @@ class ApiClient {
   late Dio _dio;
 
   ApiClient() {
+    print("base url: ${ApiConstants.baseUrl}");
     _dio = Dio(BaseOptions(
       baseUrl: ApiConstants.baseUrl,
       connectTimeout: Duration(seconds: 30),
@@ -18,9 +21,9 @@ class ApiClient {
     ));
 
     _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
+      onRequest: (options, handler) async {
         // Add auth token
-        final token = getStoredToken();
+        String? token = await TokenStorage.getStoredToken();
         if (token != null) {
           options.headers['Authorization'] = 'Bearer $token';
         }

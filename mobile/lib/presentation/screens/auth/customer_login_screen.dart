@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sanctuary/core/network/api_client.dart';
+import 'package:sanctuary/core/utils/token_storage.dart';
+import 'package:sanctuary/data/models/login_request.dart';
+import 'package:sanctuary/data/repositories/auth_repository_impl.dart';
 
 class CustomerLoginScreen extends StatefulWidget {
   @override
@@ -28,19 +32,41 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
         _isLoading = true;
       });
 
-      // Simulate login process
-      await Future.delayed(Duration(seconds: 2));
-
-      setState(() {
-        _isLoading = false;
-      });
-
-      // Navigate to customer dashboard
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/customer-dashboard',
-            (route) => false,
+      final loginRequest = LoginRequest(
+        username: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       );
+
+      print(loginRequest.toJson());
+
+      try {
+        final authResponse = await AuthRepository(ApiClient()).login(loginRequest);
+
+        await TokenStorage.saveToken(authResponse.token);
+
+        setState(() {
+          _isLoading = false;
+        });
+
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/customer-dashboard',
+              (route) => false,
+        );
+
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+
+        // Show error using SnackBar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Login failed: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 

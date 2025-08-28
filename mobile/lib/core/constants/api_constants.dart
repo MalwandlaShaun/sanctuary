@@ -1,5 +1,6 @@
 class ApiConstants {
-  static const String baseUrl = 'https://your-api-domain.com/api/v1';
+   static String baseUrl = 'https://r2bnik9np0.execute-api.eu-west-1.amazonaws.com/dev';
+  //static const String baseUrl = 'http://10.0.2.2:8080';
 
   // Auth endpoints
   static const String login = '/auth/login';

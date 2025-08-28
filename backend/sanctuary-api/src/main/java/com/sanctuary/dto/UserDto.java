@@ -25,8 +25,6 @@ public class UserDto extends BaseDto {
 
     boolean emailVerified = false;
 
-    private List<Role> roles;
-
     private String identityNo;
 
     private String passportNo;
