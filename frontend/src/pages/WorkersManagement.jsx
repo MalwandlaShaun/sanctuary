@@ -82,14 +82,30 @@ const WorkersManagement = () => {
         setPromoteNote('');
     };
 
-    // Handle Edit form submission
-    const handleEditSubmit = () => {
-        const updatedWorkers = data.workers.data.map(worker =>
-            worker.id === editModal.worker.id ? { ...worker, ...editForm } : worker
-        );
-        setData({ ...data, workers: updatedWorkers });
-        setEditModal({ open: false, worker: null });
-    };
+   // Handle Edit form submission
+const handleEditSubmit = async () => {
+    try {
+      const updatedWorker = { ...editForm };
+      await setData(
+        {
+          workers: {
+            ...data.workers,
+            data: data.workers.data.map(worker =>
+              worker.id === editModal.worker.id ? updatedWorker : worker
+            ),
+          },
+        },
+        {
+          endpoint: 'workers',
+          updatedItem: updatedWorker,
+        }
+      );
+      setEditModal({ open: false, worker: null });
+    } catch (error) {
+      console.error('Error updating worker:', error);
+      alert('Failed to update worker. Please try again.');
+    }
+  };
 
     // Handle Promote submission
     const handlePromoteSubmit = () => {

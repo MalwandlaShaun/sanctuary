@@ -9,15 +9,19 @@ const ReviewsRatings = () => {
     const [ratingFilter, setRatingFilter] = useState('All Ratings');
     const [statusFilter, setStatusFilter] = useState('All Status');
     const [dateFilter, setDateFilter] = useState('');
-    const [filteredReviews, setFilteredReviews] = useState(data?.reviews.data || []);
+    const [filteredReviews, setFilteredReviews] = useState(data?.reviews?.data || []);
+    const [selectedReviews, setSelectedReviews] = useState([]);
+    const [selectAll, setSelectAll] = useState(false);
     const [viewJobModal, setViewJobModal] = useState({ open: false, job: null });
-    const [moderateModal, setModerateModal] = useState({ open: false, review: null });
-    const [publishModal, setPublishModal] = useState({ open: false, review: null });
-    const [moderateForm, setModerateForm] = useState({ status: '', note: '' });
+    const [bulkActionModal, setBulkActionModal] = useState({ open: false, action: null });
+    const [bulkForm, setBulkForm] = useState({ status: '', note: '' });
 
     // Update filtered reviews when search or filters change
     useEffect(() => {
-        if (!data?.reviews) return;
+        if (!data?.reviews?.data) {
+            setFilteredReviews([]);
+            return;
+        }
 
         let result = data.reviews.data;
 
@@ -43,49 +47,110 @@ const ReviewsRatings = () => {
         }
 
         setFilteredReviews(result);
-    }, [searchQuery, ratingFilter, statusFilter, dateFilter, data]);
+    }, [searchQuery, ratingFilter, statusFilter, dateFilter, data?.reviews?.data]);
 
-    // Handle View Job action
-    const handleViewJob = (review) => {
-        const job = data.jobs.data.find(job => job.id === review.jobId);
-        setViewJobModal({ open: true, job });
-    };
-
-    // Handle Moderate action
-    const handleModerate = (review) => {
-        setModerateModal({ open: true, review });
-        setModerateForm({ status: review.status, note: '' });
-    };
-
-    // Handle Publish action
-    const handlePublish = (review) => {
-        if (review.status !== 'PUBLISHED') {
-            setPublishModal({ open: true, review });
+    // Handle individual review selection
+    const handleReviewSelect = (reviewId, isSelected) => {
+        if (isSelected) {
+            setSelectedReviews([...selectedReviews, reviewId]);
+        } else {
+            setSelectedReviews(selectedReviews.filter(id => id !== reviewId));
         }
     };
 
-    // Handle Moderate form submission
-    const handleModerateSubmit = () => {
-        const updatedReviews = data.reviews.map(review =>
-            review.id === moderateModal.review.id ? { ...review, status: moderateForm.status } : review
-        );
-        setData({ ...data, reviews: updatedReviews });
-        setModerateModal({ open: false, review: null });
-        setModerateForm({ status: '', note: '' });
-        // In a real app, moderateForm.note would be sent to a backend
+    // Handle select all toggle
+    const handleSelectAll = (isSelected) => {
+        setSelectAll(isSelected);
+        if (isSelected) {
+            setSelectedReviews(filteredReviews.map(review => review.id));
+        } else {
+            setSelectedReviews([]);
+        }
     };
 
-    // Handle Publish submission
-    const handlePublishSubmit = () => {
-        const updatedReviews = data.reviews.map(review =>
-            review.id === publishModal.review.id ? { ...review, status: 'PUBLISHED' } : review
-        );
-        setData({ ...data, reviews: updatedReviews });
-        setPublishModal({ open: false, review: null });
+    // Update selectAll when individual selections change
+    useEffect(() => {
+        if (filteredReviews.length > 0) {
+            setSelectAll(selectedReviews.length === filteredReviews.length);
+        }
+    }, [selectedReviews, filteredReviews]);
+
+    // Handle View Job action
+    const handleViewJob = (review) => {
+        const job = data?.jobs?.data?.find(job => job.id === review.jobId);
+        setViewJobModal({ open: true, job });
+    };
+
+    // Handle bulk action initiation
+    const handleBulkAction = (action) => {
+        if (selectedReviews.length === 0) {
+            alert('Please select at least one review.');
+            return;
+        }
+        setBulkActionModal({ open: true, action });
+        setBulkForm({ status: action === 'publish' ? 'PUBLISHED' : '', note: '' });
+    };
+
+    // Handle bulk action submission
+    const handleBulkActionSubmit = async () => {
+        try {
+            const updatedReviews = data.reviews.data.map(review => {
+                if (selectedReviews.includes(review.id)) {
+                    const updates = { status: bulkForm.status };
+                    if (bulkForm.note) {
+                        updates.moderationNote = bulkForm.note;
+                    }
+                    return { ...review, ...updates };
+                }
+                return review;
+            });
+
+            // Get only the reviews that were actually updated
+            const reviewsToUpdate = updatedReviews.filter(review => 
+                selectedReviews.includes(review.id)
+            );
+
+            await setData(
+                {
+                    reviews: {
+                        ...data.reviews,
+                        data: updatedReviews,
+                    },
+                },
+                {
+                    endpoint: 'reviews',
+                    updatedItems: reviewsToUpdate, // Pass multiple items
+                }
+            );
+
+            setBulkActionModal({ open: false, action: null });
+            setBulkForm({ status: '', note: '' });
+            setSelectedReviews([]);
+            setSelectAll(false);
+        } catch (error) {
+            console.error('Error updating reviews:', error);
+            alert('Failed to update reviews. Please try again.');
+        }
     };
 
     if (!data) {
         return <div>Error: AppContext is not available. Ensure Dashboard is wrapped in Router.</div>;
+    }
+
+    if (data.reviews?.isLoading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-lg">Loading reviews data...</div>
+            </div>
+        );
+    }
+
+    if (data.reviews?.error) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-red-500">Error: {data.reviews.error}</div>
+            </div>
+        );
     }
 
     return (
@@ -117,11 +182,11 @@ const ReviewsRatings = () => {
                         onChange={(e) => setRatingFilter(e.target.value)}
                     >
                         <option>All Ratings</option>
-                        <option>5 Stars</option>
-                        <option>4 Stars</option>
-                        <option>3 Stars</option>
-                        <option>2 Stars</option>
-                        <option>1 Star</option>
+                        <option>5</option>
+                        <option>4</option>
+                        <option>3</option>
+                        <option>2</option>
+                        <option>1</option>
                     </select>
                     <select
                         className="px-4 py-2 border border-gray-300 rounded-lg"
@@ -140,15 +205,70 @@ const ReviewsRatings = () => {
                         onChange={(e) => setDateFilter(e.target.value)}
                     />
                 </div>
+
+                {/* Bulk Actions Bar */}
+                <div className="bg-white p-4 rounded-lg shadow-sm border mb-6">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <label className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    checked={selectAll}
+                                    onChange={(e) => handleSelectAll(e.target.checked)}
+                                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                />
+                                <span className="ml-2 text-sm text-gray-700">
+                                    Select All ({filteredReviews.length} reviews)
+                                </span>
+                            </label>
+                            {selectedReviews.length > 0 && (
+                                <span className="text-sm text-blue-600 font-medium">
+                                    {selectedReviews.length} selected
+                                </span>
+                            )}
+                        </div>
+
+                        {selectedReviews.length > 0 && (
+                            <div className="flex gap-2">
+                                <button
+                                    className="px-4 py-2 text-sm bg-green-50 text-green-600 rounded-lg hover:bg-green-100"
+                                    onClick={() => handleBulkAction('publish')}
+                                >
+                                    Publish Selected
+                                </button>
+                                <button
+                                    className="px-4 py-2 text-sm bg-yellow-50 text-yellow-600 rounded-lg hover:bg-yellow-100"
+                                    onClick={() => handleBulkAction('review')}
+                                >
+                                    Mark Under Review
+                                </button>
+                                <button
+                                    className="px-4 py-2 text-sm bg-red-50 text-red-600 rounded-lg hover:bg-red-100"
+                                    onClick={() => handleBulkAction('flag')}
+                                >
+                                    Flag Selected
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
 
             <div className="space-y-4">
                 {filteredReviews.map((review, index) => (
-                    <div key={review.id} className="bg-white rounded-lg shadow-sm p-6 border">
+                    <div key={review.id || index} className="bg-white rounded-lg shadow-sm p-6 border">
                         <div className="flex items-start justify-between mb-4">
-                            <div>
-                                <h3 className="font-semibold text-gray-900">{review.reviewer} reviewed {review.reviewee}</h3>
-                                <p className="text-sm text-gray-600">Job #{review.jobId} - {review.service || 'House Cleaning'} • {review.date}</p>
+                            <div className="flex items-start gap-3">
+                                <input
+                                    type="checkbox"
+                                    checked={selectedReviews.includes(review.id || index)}
+                                    onChange={(e) => handleReviewSelect(review.id || index, e.target.checked)}
+                                    className="mt-1 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                />
+                                <div>
+                                    <h3 className="font-semibold text-gray-900">{review.reviewer} reviewed {review.reviewee}</h3>
+                                    <p className="text-sm text-gray-600">Job #{review.jobId} • {review.date}</p>
+                                </div>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="flex text-yellow-400">
@@ -166,33 +286,16 @@ const ReviewsRatings = () => {
                             </div>
                         </div>
 
-                        <div className="mb-4">
+                        <div className="mb-4 ml-8">
                             <p className="text-gray-700">{review.comment}</p>
                         </div>
 
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 ml-8">
                             <button
                                 className="px-4 py-2 text-sm bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100"
                                 onClick={() => handleViewJob(review)}
                             >
                                 View Job
-                            </button>
-                            <button
-                                className="px-4 py-2 text-sm bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100"
-                                onClick={() => handleModerate(review)}
-                            >
-                                Moderate
-                            </button>
-                            <button
-                                className={`px-4 py-2 text-sm rounded-lg ${
-                                    review.status === 'PUBLISHED'
-                                        ? 'bg-green-50 text-green-600 cursor-not-allowed opacity-50'
-                                        : 'bg-green-50 text-green-600 hover:bg-green-100'
-                                }`}
-                                onClick={() => handlePublish(review)}
-                                disabled={review.status === 'PUBLISHED'}
-                            >
-                                {review.status === 'PUBLISHED' ? 'Published' : 'Publish'}
                             </button>
                         </div>
                     </div>
@@ -210,7 +313,7 @@ const ReviewsRatings = () => {
                                 <p><strong>Customer:</strong> {viewJobModal.job.customer}</p>
                                 <p><strong>Worker:</strong> {viewJobModal.job.worker}</p>
                                 <p><strong>Service:</strong> {viewJobModal.job.service}</p>
-                                <p><strong>Amount:</strong> R{viewJobModal.job.amount.toFixed(2)}</p>
+                                <p><strong>Amount:</strong> R{viewJobModal.job.amount?.toFixed(2)}</p>
                                 <p><strong>Status:</strong> {viewJobModal.job.status}</p>
                                 <p><strong>Date:</strong> {viewJobModal.job.date}</p>
                             </div>
@@ -229,71 +332,53 @@ const ReviewsRatings = () => {
                 </div>
             )}
 
-            {/* Moderate Modal */}
-            {moderateModal.open && (
+            {/* Bulk Action Modal */}
+            {bulkActionModal.open && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                        <h2 className="text-xl font-bold mb-4">Moderate Review</h2>
+                        <h2 className="text-xl font-bold mb-4">
+                            {bulkActionModal.action === 'publish' ? 'Publish Reviews' :
+                             bulkActionModal.action === 'review' ? 'Mark Reviews Under Review' :
+                             'Flag Reviews'}
+                        </h2>
+                        <p className="mb-4">
+                            You are about to update {selectedReviews.length} selected review(s).
+                        </p>
                         <div className="space-y-4">
-                            <p className="text-gray-700">Review by {moderateModal.review.reviewer} for {moderateModal.review.reviewee}</p>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Status</label>
+                                <label className="block text-sm font-medium text-gray-700">New Status</label>
                                 <select
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                                    value={moderateForm.status}
-                                    onChange={(e) => setModerateForm({ ...moderateForm, status: e.target.value })}
+                                    value={bulkForm.status}
+                                    onChange={(e) => setBulkForm({ ...bulkForm, status: e.target.value })}
                                 >
-                                    <option>PUBLISHED</option>
-                                    <option>UNDER REVIEW</option>
-                                    <option>FLAGGED</option>
+                                    <option value="PUBLISHED">PUBLISHED</option>
+                                    <option value="UNDER REVIEW">UNDER REVIEW</option>
+                                    <option value="FLAGGED">FLAGGED</option>
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Moderation Note</label>
+                                <label className="block text-sm font-medium text-gray-700">Note (Optional)</label>
                                 <textarea
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                                    value={moderateForm.note}
-                                    onChange={(e) => setModerateForm({ ...moderateForm, note: e.target.value })}
-                                    placeholder="Enter moderation note..."
+                                    value={bulkForm.note}
+                                    onChange={(e) => setBulkForm({ ...bulkForm, note: e.target.value })}
+                                    placeholder="Enter bulk action note..."
                                 />
                             </div>
                         </div>
                         <div className="mt-6 flex justify-end gap-2">
                             <button
                                 className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
-                                onClick={() => setModerateModal({ open: false, review: null })}
+                                onClick={() => setBulkActionModal({ open: false, action: null })}
                             >
                                 Cancel
                             </button>
                             <button
-                                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
-                                onClick={handleModerateSubmit}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                onClick={handleBulkActionSubmit}
                             >
-                                Save
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Publish Modal */}
-            {publishModal.open && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 w-full max-w-md">
-                        <h2 className="text-xl font-bold mb-4">Publish Review</h2>
-                        <p className="mb-4">Are you sure you want to publish the review by <strong>{publishModal.review.reviewer}</strong> for <strong>{publishModal.review.reviewee}</strong>?</p>
-                        <div className="mt-6 flex justify-end gap-2">
-                            <button
-                                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300"
-                                onClick={() => setPublishModal({ open: false, review: null })}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-                                onClick={handlePublishSubmit}
-                            >
-                                Publish
+                                Update {selectedReviews.length} Review(s)
                             </button>
                         </div>
                     </div>

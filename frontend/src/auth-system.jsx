@@ -13,7 +13,9 @@ const LoginPage = () => {
         setIsLoading(true);
         setError(null);
         try {
-            const response = await fetch('http://localhost:4000/login', {
+            // const response = await fetch('http://localhost:4000/login', {
+
+            const response = await fetch('https://r2bnik9np0.execute-api.eu-west-1.amazonaws.com/dev/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(credentials),

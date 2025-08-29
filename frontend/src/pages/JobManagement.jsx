@@ -18,6 +18,7 @@ const JobManagement = () => {
 
     // Update filtered jobs when search or filters change
     useEffect(() => {
+        // console.log('Data :', data);
         if (!data?.jobs) return;
 
         let result = data.jobs.data;
@@ -62,14 +63,30 @@ const JobManagement = () => {
         setContactForm({ recipient: 'customer', message: '' });
     };
 
-    // Handle Track form submission
-    const handleTrackSubmit = () => {
-        const updatedJobs = data.jobs.map(job =>
-            job.id === trackModal.job.id ? { ...job, status: trackForm.status } : job
-        );
-        setData({ ...data, jobs: updatedJobs });
-        setTrackModal({ open: false, job: null });
-    };
+  // Handle Track form submission
+const handleTrackSubmit = async () => {
+    try {
+      const updatedJob = { ...trackModal.job, status: trackForm.status };
+      await setData(
+        {
+          jobs: {
+            ...data.jobs,
+            data: data.jobs.data.map(job =>
+              job.id === trackModal.job.id ? updatedJob : job
+            ),
+          },
+        },
+        {
+          endpoint: 'jobs',
+          updatedItem: updatedJob,
+        }
+      );
+      setTrackModal({ open: false, job: null });
+    } catch (error) {
+      console.error('Error updating job:', error);
+      alert('Failed to update job status. Please try again.');
+    }
+  };
 
     // Handle Contact form submission
     const handleContactSubmit = () => {
