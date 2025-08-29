@@ -1,34 +1,34 @@
-// const mockData = {
-//     dashboard: {
-//         totalUsers: 2847,
-//         activeWorkers: 1234,
-//         completedJobs: 5621,
-//         totalRevenue: 847000
-//     },
-//     users: [
-//         { id: '#USR001', name: 'John Smith', email: 'john@email.com', type: 'Customer', status: 'ACTIVE', verification: 'VERIFIED', joinDate: '2024-01-15' },
-//         { id: '#USR002', name: 'Sarah Johnson', email: 'sarah@email.com', type: 'Worker', status: 'PENDING', verification: 'PENDING', joinDate: '2024-02-20' },
-//     ],
-//     workers: [
-//         { id: '#WRK001', name: 'Maria Garcia', skills: 'Cleaning, Organizing', rating: 4.9, jobsCompleted: 127, earnings: 12450, status: 'ACTIVE' },
-//         { id: '#WRK002', name: 'Peter Wilson', skills: 'Gardening, Landscaping', rating: 4.6, jobsCompleted: 89, earnings: 9870, status: 'ACTIVE' },
-//     ],
-//     jobs: [
-//         { id: '#JOB001', customer: 'John Smith', worker: 'Maria Garcia', service: 'House Cleaning', amount: 420.00, status: 'COMPLETED', date: '2024-08-22' },
-//         { id: '#JOB002', customer: 'Lisa Davis', worker: 'Peter Wilson', service: 'Garden Maintenance', amount: 680.00, status: 'IN PROGRESS', date: '2024-08-23' },
-//     ],
-//     reviews: [
-//         { reviewer: 'John Smith', reviewee: 'Maria Garcia', jobId: '#JOB001', rating: 5, comment: 'Excellent service! Maria was professional, thorough, and left my house spotless. Highly recommend!', date: '2024-08-22', status: 'PUBLISHED' },
-//         { reviewer: 'Lisa Davis', reviewee: 'Peter Wilson', jobId: '#JOB002', rating: 2, comment: 'Worker arrived late and didn\'t complete all requested tasks. Communication was poor.', date: '2024-08-20', status: 'UNDER REVIEW' },
-//     ],
-//     payments: [
-//         { id: '#TXN001', type: 'Job Payment', amount: 420.00, commission: 126.00, user: 'John Smith', status: 'COMPLETED', date: '2024-08-22' },
-//     ],
-//     safetyAlerts: [
-//         { type: 'Emergency Alert', message: 'Worker #WRK045 has triggered panic button during Job #JOB234', location: '123 Oak Street, Pretoria', status: 'Emergency Response' },
-//         { type: 'Safety Violation', message: 'Customer reported inappropriate behavior from Worker #WRK078', incident: '#INC001', status: 'Investigate' },
-//         { type: 'Background Check Complete', message: 'Worker #WRK089 cleared for platform access', status: 'Approve' },
-//     ]
-// };
+const mockData = {
+    dashboard: {
+        totalUsers: 2847,
+        activeWorkers: 1234,
+        completedJobs: 5621,
+        totalRevenue: 847000
+    },
+    users: [
+        { id: '#USR001', name: 'John Smith', email: 'john@email.com', type: 'Customer', status: 'ACTIVE', verification: 'VERIFIED', joinDate: '2024-01-15' },
+        { id: '#USR002', name: 'Sarah Johnson', email: 'sarah@email.com', type: 'Worker', status: 'PENDING', verification: 'PENDING', joinDate: '2024-02-20' },
+    ],
+    workers: [
+        { id: '#WRK001', name: 'Maria Garcia', skills: 'Cleaning, Organizing', rating: 4.9, jobsCompleted: 127, earnings: 12450, status: 'ACTIVE' },
+        { id: '#WRK002', name: 'Peter Wilson', skills: 'Gardening, Landscaping', rating: 4.6, jobsCompleted: 89, earnings: 9870, status: 'ACTIVE' },
+    ],
+    jobs: [
+        { id: '#JOB001', customer: 'John Smith', worker: 'Maria Garcia', service: 'House Cleaning', amount: 420.00, status: 'COMPLETED', date: '2024-08-22' },
+        { id: '#JOB002', customer: 'Lisa Davis', worker: 'Peter Wilson', service: 'Garden Maintenance', amount: 680.00, status: 'IN PROGRESS', date: '2024-08-23' },
+    ],
+    reviews: [
+        { reviewer: 'John Smith', reviewee: 'Maria Garcia', jobId: '#JOB001', rating: 5, comment: 'Excellent service! Maria was professional, thorough, and left my house spotless. Highly recommend!', date: '2024-08-22', status: 'PUBLISHED' },
+        { reviewer: 'Lisa Davis', reviewee: 'Peter Wilson', jobId: '#JOB002', rating: 2, comment: 'Worker arrived late and didn\'t complete all requested tasks. Communication was poor.', date: '2024-08-20', status: 'UNDER REVIEW' },
+    ],
+    payments: [
+        { id: '#TXN001', type: 'Job Payment', amount: 420.00, commission: 126.00, user: 'John Smith', status: 'COMPLETED', date: '2024-08-22' },
+    ],
+    safetyAlerts: [
+        { type: 'Emergency Alert', message: 'Worker #WRK045 has triggered panic button during Job #JOB234', location: '123 Oak Street, Pretoria', status: 'Emergency Response' },
+        { type: 'Safety Violation', message: 'Customer reported inappropriate behavior from Worker #WRK078', incident: '#INC001', status: 'Investigate' },
+        { type: 'Background Check Complete', message: 'Worker #WRK089 cleared for platform access', status: 'Approve' },
+    ]
+};
 
-// export default mockData;
+export default mockData;

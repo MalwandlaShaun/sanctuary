@@ -3,27 +3,43 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useQueries, useQueryClient } from '@tanstack/react-query';
 import AppContext from '../context/AppContext';
 
-// Fetch functions for each endpoint - NOW WITH AUTHENTICATION
-const fetchData = async (endpoint, token) => {
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-  
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
+// COMMENTED OUT - Original database fetch function
+// const fetchData = async (endpoint, token) => {
+//   const headers = {
+//     'Content-Type': 'application/json',
+//   };
+//   
+//   if (token) {
+//     headers.Authorization = `Bearer ${token}`;
+//   }
 
-  const res = await fetch(`https://r2bnik9np0.execute-api.eu-west-1.amazonaws.com/dev/${endpoint}`, {
-    headers,
-  });
-  
-  if (!res.ok) {
-    throw new Error(`Error fetching ${endpoint} data: ${res.status} ${res.statusText}`);
+//   const res = await fetch(`https://r2bnik9np0.execute-api.eu-west-1.amazonaws.com/dev/${endpoint}`, {
+//     headers,
+//   });
+//   
+//   if (!res.ok) {
+//     throw new Error(`Error fetching ${endpoint} data: ${res.status} ${res.statusText}`);
+//   }
+//   return res.json();
+// };
+
+// NEW - Fetch data from local db.json file
+const fetchDataFromJson = async (endpoint) => {
+  try {
+    const res = await fetch('/db.json');
+    if (!res.ok) {
+      throw new Error(`Error fetching db.json: ${res.status} ${res.statusText}`);
+    }
+    const jsonData = await res.json();
+    
+    // Return the specific endpoint data from the JSON structure
+    return jsonData[endpoint] || [];
+  } catch (error) {
+    throw new Error(`Error loading ${endpoint} data from db.json: ${error.message}`);
   }
-  return res.json();
 };
 
-// Function to update data on the backend
+// COMMENTED OUT - Function to update data on the backend
 const updateData = async (endpoint, token, updatedData, id) => {
   const headers = {
     'Content-Type': 'application/json',
@@ -63,18 +79,31 @@ const Router = ({ children }) => {
     'safetyAlerts',
   ];
 
+  // const queries = useQueries({
+  //   queries: endpoints.map((endpoint) => ({
+  //     queryKey: [endpoint, auth.token],
+  //     queryFn: () => fetchData(endpoint, auth.token),
+  //     enabled: auth.isAuthenticated,
+  //     retry: (failureCount, error) => {
+  //       if (error?.message?.includes('401')) {
+  //         return false;
+  //       }
+  //       return failureCount < 3;
+  //     },
+  //     // Removed onSuccess - it's deprecated and causes issues
+  //   })),
+  // });
+
+  //  useQueries for db.json file
   const queries = useQueries({
     queries: endpoints.map((endpoint) => ({
-      queryKey: [endpoint, auth.token],
-      queryFn: () => fetchData(endpoint, auth.token),
-      enabled: auth.isAuthenticated,
+      queryKey: [endpoint, 'json-file'],
+      queryFn: () => fetchDataFromJson(endpoint),
+      enabled: auth.isAuthenticated, // Still respect authentication
       retry: (failureCount, error) => {
-        if (error?.message?.includes('401')) {
-          return false;
-        }
+        // For JSON file, we don't need to handle 401 errors the same way
         return failureCount < 3;
       },
-      // Removed onSuccess - it's deprecated and causes issues
     })),
   });
 
@@ -102,7 +131,6 @@ const Router = ({ children }) => {
     });
     
     setDataState(newData);
-    // console.log('Updated data state:', newData);
   }, [queryStates]); // Now depends on stable queryStates
 
   // Implement setData function
@@ -118,22 +146,26 @@ const Router = ({ children }) => {
       return;
     }
 
-    // Update backend for specific modified items
+    // Note: When using db.json, updates will only be local until you switch back to backend
+    // if (options.updatedItem && options.endpoint) {
+    //   try {
+    //     await updateData(options.endpoint, auth.token, options.updatedItem, options.updatedItem.id);
+    //     console.log(`Successfully updated ${options.endpoint} item:`, options.updatedItem.id);
+    //   } catch (error) {
+    //     console.error(`Failed to update ${options.endpoint} on backend:`, error);
+    //     // Revert optimistic update on error
+    //     setDataState((prev) => ({
+    //       ...prev,
+    //       [options.endpoint]: {
+    //         ...prev[options.endpoint],
+    //         error: error.message,
+    //       },
+    //     }));
+    //   }
+    // }
+
     if (options.updatedItem && options.endpoint) {
-      try {
-        await updateData(options.endpoint, auth.token, options.updatedItem, options.updatedItem.id);
-        console.log(`Successfully updated ${options.endpoint} item:`, options.updatedItem.id);
-      } catch (error) {
-        console.error(`Failed to update ${options.endpoint} on backend:`, error);
-        // Revert optimistic update on error
-        setDataState((prev) => ({
-          ...prev,
-          [options.endpoint]: {
-            ...prev[options.endpoint],
-            error: error.message,
-          },
-        }));
-      }
+      console.log(`Local update only - ${options.endpoint} item:`, options.updatedItem.id, '(using db.json mode)');
     }
   };
 
@@ -172,7 +204,10 @@ const Router = ({ children }) => {
   //   verifyToken();
   // }, [auth.token]);
 
+  // MODIFIED - Auth error handling (simplified for JSON mode)
   useEffect(() => {
+    // When using db.json, we don't expect 401 errors, but keep the structure
+    // for when switching back to database mode
     const hasAuthError = queryStates.some(queryState => 
       queryState.error?.message?.includes('401') || 
       queryState.error?.message?.includes('Unauthorized')
@@ -207,7 +242,6 @@ const Router = ({ children }) => {
 
   return (
     <AppContext.Provider value={{ currentRoute, setCurrentRoute, data, setData, auth, setAuth }}>
-      {/* {console.log('Context value provided:', { data })} */}
       {children}
     </AppContext.Provider>
   );
