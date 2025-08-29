@@ -146,31 +146,31 @@ const Router = ({ children }) => {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  useEffect(() => {
-    const verifyToken = async () => {
-      if (!auth.token) return;
+  // useEffect(() => {
+  //   const verifyToken = async () => {
+  //     if (!auth.token) return;
       
-      try {
-        const response = await fetch('http://localhost:4000/verify-token', {
-          headers: { 
-            'Authorization': `Bearer ${auth.token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        if (!response.ok) {
-          console.log('Token verification failed');
-          localStorage.removeItem('authToken');
-          setAuth({ isAuthenticated: false, token: null });
-        }
-      } catch (error) {
-        console.error('Token verification error:', error);
-        localStorage.removeItem('authToken');
-        setAuth({ isAuthenticated: false, token: null });
-      }
-    };
+  //     try {
+  //       const response = await fetch('https://r2bnik9np0.execute-api.eu-west-1.amazonaws.com/devverify-token', {
+  //         headers: { 
+  //           'Authorization': `Bearer ${auth.token}`,
+  //           'Content-Type': 'application/json',
+  //         },
+  //       });
+  //       if (!response.ok) {
+  //         console.log('Token verification failed');
+  //         localStorage.removeItem('authToken');
+  //         setAuth({ isAuthenticated: false, token: null });
+  //       }
+  //     } catch (error) {
+  //       console.error('Token verification error:', error);
+  //       localStorage.removeItem('authToken');
+  //       setAuth({ isAuthenticated: false, token: null });
+  //     }
+  //   };
     
-    verifyToken();
-  }, [auth.token]);
+  //   verifyToken();
+  // }, [auth.token]);
 
   useEffect(() => {
     const hasAuthError = queryStates.some(queryState => 
