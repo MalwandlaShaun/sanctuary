@@ -102,7 +102,7 @@ const Router = ({ children }) => {
     });
     
     setDataState(newData);
-    console.log('Updated data state:', newData);
+    // console.log('Updated data state:', newData);
   }, [queryStates]); // Now depends on stable queryStates
 
   // Implement setData function
