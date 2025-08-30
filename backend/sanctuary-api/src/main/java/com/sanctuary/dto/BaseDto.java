@@ -1,15 +1,20 @@
 package com.sanctuary.dto;
 
-import org.bson.types.ObjectId;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
 
 import java.time.LocalDateTime;
 
-
+@Getter
+@Setter
 public class BaseDto {
-    ObjectId id;
 
-    LocalDateTime createdDate;
+    protected String id;
 
-    LocalDateTime updatedDate;
+    protected LocalDateTime createdDate;
+
+    protected LocalDateTime updatedDate;
 
 }

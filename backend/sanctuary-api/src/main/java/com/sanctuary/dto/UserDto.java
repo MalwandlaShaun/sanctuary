@@ -13,9 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class UserDto extends BaseDto {
 
-    private String firstName;
-
-    private String lastName;
+    private String fullName;
 
     private String mobileNo;
 

@@ -13,6 +13,7 @@ import com.sanctuary.repository.UserRepository;
 import com.sanctuary.service.user.IUserService;
 import com.sanctuary.util.DtoMapper;
 import com.sanctuary.util.JwtUtil;
+import io.swagger.v3.core.util.Json;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,6 +47,8 @@ public class UserService implements IUserService {
         System.out.println("auth");
 
         User user = (User) authentication.getPrincipal();
+
+        System.out.print(user.getId());
         String token = jwtUtil.generateToken(user.getUsername(),user.getRoles().stream().map(Role::name).toList());
 
         System.out.println(token);
@@ -57,8 +60,11 @@ public class UserService implements IUserService {
     public void createUser(RegisterRequest registerRequest) {
         User user = dtoMapper.map(registerRequest,User.class);
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setEmail(registerRequest.getEmail());
+        user.setMobileNo(registerRequest.getMobileNo());
+        user.setFullName(registerRequest.getFullName());
 
-
+        System.out.print(Json.pretty(registerRequest));
         if(StringUtils.hasText(registerRequest.getIdentityNo()) && StringUtils.hasText(registerRequest.getPassportNo()))
             throw new NotAllowedException("User can't have both an identity number and passport number");
 
@@ -98,6 +104,8 @@ public class UserService implements IUserService {
         );
 
         user.setRoles(List.of(role));
+
+        System.out.print(Json.pretty(user));
 
         userRepository.save(user);
     }

@@ -1,8 +1,8 @@
 import 'package:sanctuary/data/models/country.dart';
 
 class UserModel {
-  final String firstName;
-  final String lastName;
+  final String id;
+  final String fullName;
   final String mobileNo;
   final bool mobileNoVerified;
   final String email;
@@ -12,8 +12,8 @@ class UserModel {
   final Country? country;
 
   UserModel({
-    required this.firstName,
-    required this.lastName,
+    required this.id,
+    required this.fullName,
     required this.mobileNo,
     this.mobileNoVerified = false,
     required this.email,
@@ -25,8 +25,8 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      firstName: json['firstName'] ?? '',
-      lastName: json['lastName'] ?? '',
+      id: json['id'] ?? '',
+      fullName: json['fullName'] ?? '',
       mobileNo: json['mobileNo'] ?? '',
       mobileNoVerified: json['mobileNoVerified'] ?? false,
       email: json['email'] ?? '',
@@ -38,8 +38,7 @@ class UserModel {
   }
 
   Map<String, dynamic> toJson() => {
-    'firstName': firstName,
-    'lastName': lastName,
+    'fullName': fullName,
     'mobileNo': mobileNo,
     'mobileNoVerified': mobileNoVerified,
     'email': email,

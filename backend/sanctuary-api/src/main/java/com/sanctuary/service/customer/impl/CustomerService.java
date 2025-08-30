@@ -33,6 +33,8 @@ public class CustomerService implements ICustomerService {
     @Override
     public void registerCustomer(RegisterCustomer registerCustomer) {
 
+        System.out.print("registering user");
+
         userService.createUser(registerCustomer);
 
         User user = userRepository.findByEmail(registerCustomer.getEmail()).orElseThrow(()->new NotFoundException("User not found"));

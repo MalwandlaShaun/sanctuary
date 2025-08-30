@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:sanctuary/core/network/api_client.dart';
 import 'package:sanctuary/core/utils/token_storage.dart';
+import 'package:sanctuary/core/utils/user_storage.dart';
 import 'package:sanctuary/data/models/login_request.dart';
 import 'package:sanctuary/data/repositories/auth_repository_impl.dart';
 
@@ -38,8 +39,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
         final authResponse = await AuthRepository(ApiClient()).login(loginRequest);
 
-        // Save token locally
         await TokenStorage.saveToken(authResponse.token);
+
+        print(authResponse.user.fullName);
+        await UserStorage.saveUser(authResponse.user);
+
+        final user = await UserStorage.getStoredUser();
+        print("full name ${user?.fullName}");
 
         // Decode JWT to get roles
         Map<String, dynamic> payload = Jwt.parseJwt(authResponse.token);
